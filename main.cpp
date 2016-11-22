@@ -18,7 +18,7 @@ public:
 	std::vector<std::pair<int,int>> result;
 	if (buildings.size() == 1) {
 	    result.push_back(std::make_pair(buildings[0][0], buildings[0][2]));
-	    result.push_back(std::make_pair(buildings[0][2], 0));
+	    result.push_back(std::make_pair(buildings[0][1], 0));
 	}
 	else if (buildings.size() > 1) {
 	    std::vector<int> curr = buildings[0];
@@ -40,15 +40,25 @@ private:
 	std::vector<std::pair<int,int>> toPrepend{std::make_pair(rec[0], rec[2])};
 	std::transform(result.begin(), right_gt, std::inserter(toPrepend, toPrepend.end()),
 		       [&](const std::pair<int,int> & pr){
+                           std::pair<int,int> rtn;
 			   if (pr.second < rec[2])
-			       return std::make_pair(pr.first, rec[2]);
+			       rtn = std::make_pair(pr.first, rec[2]);
 			   else
-			       return pr;
+			       rtn = pr;
+                           return rtn;
 		       });
 	if (right_prev->second < rec[2])
 	    toPrepend.push_back(std::make_pair(rec[1], right_prev->second));
 
-	
+	auto curr = toPrepend.begin(), next = std::next(curr);
+        while (next != toPrepend.end()) {
+            if (curr->second == next->second)
+                next = toPrepend.erase(next);
+            else {
+                curr = next;
+                next = std::next(curr);
+            }
+        }
 	
 	auto it = result.erase(result.begin(), right_gt);
 	result.insert(it, toPrepend.begin(), toPrepend.end());
