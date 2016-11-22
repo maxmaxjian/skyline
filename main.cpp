@@ -62,17 +62,33 @@ private:
 	
 	auto it = result.erase(result.begin(), right_gt);
 	result.insert(it, toPrepend.begin(), toPrepend.end());
+
+        curr = result.begin(), next = std::next(curr);
+        while (next != result.end()) {
+            if (curr->first == next->first)
+                curr = result.erase(curr);
+            else
+                curr = next;
+            next = std::next(curr);
+        }
+        
 	return result;
     }
 };
 
 int main() {
+    // std::vector<std::vector<int>> buildings{
+    //     {2, 9, 10},
+    //     {3, 7, 15},
+    //     {5, 12, 12},
+    //     {15, 20, 10},
+    //     {19, 24, 8}
+    // };
+
     std::vector<std::vector<int>> buildings{
-	{2, 9, 10},
-	{3, 7, 15},
-	{5, 12, 12},
-	{15, 20, 10},
-	{19, 24, 8}
+        {2,9,10},
+        {9,10,11},
+        {10,12,10}
     };
 
     solution soln;
